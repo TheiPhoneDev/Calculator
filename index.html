@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Calcolatrice</title>
+</head>
+<style>
+  body {
+  font-family: sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px;
+}
+
+.titolo {
+  text-align: center;
+  margin: 0;
+}
+
+.calcolatrice {
+  background: #222;
+  padding: 30px;
+  border-radius: 20px;
+  width: 300px;
+}
+
+
+.display {
+  background: linear-gradient(to bottom, #d5e8f9, #f9fbfd);
+  color: #000;
+  font-size: 2.5rem;
+  text-align: right;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 
+  inset 0 -1px 3px rgba(0, 0, 0, 0.15),
+  0 1px 2px rgba(255, 255, 255, 0.4);}
+
+
+.tasti {
+  display: grid;
+  grid-template-columns: repeat(3, 80px);
+  gap: 20px;
+  column-gap: 30px;
+  justify-content: center;
+}
+
+button {
+  font-size: 2rem;
+  padding: 20px;
+  border: none;
+  border-radius: 80px;
+  background: #444;
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s;
+  height: 80px;
+  width: 80px;
+}
+
+button:active {
+  transform: scale(0.97);
+}
+button.uguale {
+  background: rgb(255, 162, 0);
+}
+
+button.cancella {
+  background: red;
+  border-radius: 20px;
+  width: 300px;
+}
+
+.calcolatrice, #recenti {
+  flex: 1;
+  margin-top: 300px;
+
+}
+
+
+
+</style>
+
+<body>
+  <h1 class="titolo">Calcolatrice</h1>
+
+  <div style="display: flex; justify-content: flex-start; align-items: flex-start; gap: 20px;">
+    <div class="calcolatrice">
+    <div class="display" id="display">0</div>
+    <div class="tasti">
+      <button>C</button>
+      <button>%</button>
+      <button>÷</button>
+
+      <button>7</button>
+      <button>8</button>
+      <button>9</button>
+
+      <button>4</button>
+      <button>5</button>
+      <button>6</button>
+
+      <button>1</button>
+      <button>2</button>
+      <button>3</button>
+      <button>0</button>
+
+      <button>+</button>
+      <button>×</button>
+      <button>.</button>
+
+      <button>−</button>
+      <button class="uguale">=</button>
+      <button class="cancella">AC</button>
+
+    </div>
+    </div>
+    <div id="recenti" style="margin-left: 300px;">
+      <h1>Calcoli recenti</h1>
+      <ul id="listaElementi"></ul>
+    </div>
+  </div>
+  
+  <!-- Script JavaScript-->
+  <script>
+    const display = document.getElementById('display');
+    let arrayEspressione = [];
+
+    document.querySelectorAll('button').forEach(button => {
+      button.addEventListener('click', () => {
+        const contenutoBottone = button.textContent;
+       
+
+        if(display.textContent=='0') {
+          if(['×','÷','+','−','%','.','='].includes(contenutoBottone)) {
+            return
+          }
+        }
+
+        if(contenutoBottone=='AC') {
+          arrayEspressione = [];
+          display.textContent = '0';
+        } else if(contenutoBottone=='=') {
+          const risultato = calcola(arrayEspressione);
+          display.textContent = risultato;
+          const espressione = arrayEspressione.filter(item => item !== ',').join(' ');
+          aggiungiElemento(espressione);
+          arrayEspressione = [risultato];
+          arrayEspressione = [];
+        } else if(contenutoBottone=='%') {
+          const ultimoElemento = arrayEspressione.pop();
+          const perc = parseFloat(ultimoElemento)/100;
+          const risultato = String(perc);
+          arrayEspressione.push(risultato);
+          display.textContent = risultato;
+          arrayEspressione.join(' ');
+        } else if(contenutoBottone=='C') {
+          if(arrayEspressione.length<=1) {
+            arrayEspressione = [];
+            display.textContent = '0';
+          } else {
+            arrayEspressione.pop();
+            const espressione = arrayEspressione.filter(item => item !== ',').join(' ');
+            display.textContent = espressione;
+          }
+        } else {
+          arrayEspressione.push(contenutoBottone);
+          display.textContent = arrayEspressione.join(' ');
+        }
+
+      
+
+      });
+    });
+
+  function calcola(arr) {
+    const str = arr.join('')
+      .replace(/×/g, '*')
+      .replace(/÷/g, '/')
+      .replace(/−/g, '-');
+
+    try {
+      return Function("return "+str)();
+    } catch {
+      return 'Errore';
+    }
+  }
+
+  function aggiungiElemento(testo) {
+    const lista = document.getElementById('listaElementi');
+    const nuovoElemento = document.createElement('li');
+    nuovoElemento.textContent = testo;
+    lista.appendChild(nuovoElemento);
+  }
+
+  
+  </script>
+
+</body>
+</html>
