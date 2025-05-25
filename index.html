@@ -67,6 +67,7 @@ button.uguale {
   background: rgb(255, 162, 0);
 }
 
+
 button.cancella {
   background: red;
   border-radius: 20px;
@@ -78,6 +79,15 @@ button.cancella {
   margin-top: 300px;
 
 }
+
+.bottone-riprendi {
+  font-size: small;
+  background: none;
+  border-radius: 20px;
+  color: #000;
+}
+
+
 
 
 
@@ -113,7 +123,11 @@ button.cancella {
 
       <button>−</button>
       <button class="uguale">=</button>
+      <button>(</button>
+      <button>)</button>
+      <button>^</button>
       <button class="cancella">AC</button>
+
 
     </div>
     </div>
@@ -134,7 +148,7 @@ button.cancella {
        
 
         if(display.textContent=='0') {
-          if(['×','÷','+','−','%','.','='].includes(contenutoBottone)) {
+          if(['×','÷','+','−','%','.','=','^'].includes(contenutoBottone)) {
             return
           }
         }
@@ -179,7 +193,8 @@ button.cancella {
     const str = arr.join('')
       .replace(/×/g, '*')
       .replace(/÷/g, '/')
-      .replace(/−/g, '-');
+      .replace(/−/g, '-')
+      .replace(/\^/g, '**');
 
     try {
       return Function("return "+str)();
@@ -189,13 +204,25 @@ button.cancella {
   }
 
   function aggiungiElemento(testo) {
-    const lista = document.getElementById('listaElementi');
-    const nuovoElemento = document.createElement('li');
-    nuovoElemento.textContent = testo;
-    lista.appendChild(nuovoElemento);
-  }
+      const lista = document.getElementById('listaElementi');
+      const nuovoElemento = document.createElement('li');
 
-  
+      const spanTesto = document.createElement('span');
+      spanTesto.textContent = testo;
+
+      const bottone = document.createElement('button');
+      bottone.textContent = 'Riprendi';
+      bottone.classList.add('bottone-riprendi')
+      bottone.onclick = function() {
+        arrayEspressione.push(testo);
+        display.textContent = arrayEspressione.join(' ');
+      };
+
+      nuovoElemento.appendChild(spanTesto);
+      nuovoElemento.appendChild(bottone);
+
+      lista.appendChild(nuovoElemento);
+    }
   </script>
 
 </body>
