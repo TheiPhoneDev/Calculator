@@ -35,8 +35,19 @@
   border-radius: 12px;
   margin-bottom: 20px;
   box-shadow: 
-  inset 0 -1px 3px rgba(0, 0, 0, 0.15),
-  0 1px 2px rgba(255, 255, 255, 0.4);}
+    inset 0 -1px 3px rgba(0, 0, 0, 0.15),
+    0 1px 2px rgba(255, 255, 255, 0.4);
+
+  width: 100%;
+  white-space: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  box-sizing: border-box;
+  direction: ltr;
+}
+
+
+
 
 
 .tasti {
@@ -140,6 +151,8 @@ button.cancella {
   <!-- Script JavaScript-->
   <script>
     const display = document.getElementById('display');
+    
+
     let arrayEspressione = [];
 
     document.querySelectorAll('button').forEach(button => {
@@ -147,11 +160,10 @@ button.cancella {
         const contenutoBottone = button.textContent;
        
 
-        if(display.textContent=='0') {
-          if(['×','÷','+','−','%','.','=','^'].includes(contenutoBottone)) {
-            return
-          }
+        if (arrayEspressione.length == 0 && ['×','÷','+','−','%','.','=','^'].includes(contenutoBottone)) {
+          return;
         }
+
 
         if(contenutoBottone=='AC') {
           arrayEspressione = [];
@@ -182,6 +194,11 @@ button.cancella {
         } else {
           arrayEspressione.push(contenutoBottone);
           display.textContent = arrayEspressione.join(' ');
+          display.scrollLeft = display.scrollWidth;
+          display.scrollTo({
+            left: display.scrollWidth,
+            behavior: 'smooth'
+          });
         }
 
       
